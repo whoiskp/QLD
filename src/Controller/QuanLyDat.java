@@ -35,45 +35,91 @@ public class QuanLyDat {
      * @return Dữ liệu Thửa đất
      */
     private ThuaDat NhapThuaDat() {
-        String diachi, chusohuu, loainha, mucdichsudung;
+        String diachi, chusohuu, loainha = "", mucdichsudung = "";
         float dientich;
         long giatien;
+        System.out.println("Nhập thông tin Thửa Đất cần thêm");
         System.out.print("Địa chỉ: ");
         diachi = in.nextLine();
         System.out.print("Diện tích: ");
         dientich = Float.parseFloat(in.nextLine());
         System.out.print("Chủ sở hữu hiện tại: ");
         chusohuu = in.nextLine();
-        System.out.print("Loại nhà: ");
-        loainha = in.nextLine();
-        System.out.print("Mục đích sử dụng: ");
-        mucdichsudung = in.nextLine();
+
+        int chon = 0; // Gán = 0 để vào vòng lặp
+        // Nhập Mục đích sử dụng
+        while (chon < 1 || chon > 2) {
+            System.out.print(ConfigData.strNhapMucDichSD);
+            chon = Integer.parseInt(in.nextLine());
+            switch (chon) {
+                case 1:
+                    mucdichsudung = "Nhà ở";
+                    break;
+                case 2:
+                    mucdichsudung = "Kinh doanh";
+                    break;
+                default:
+                    System.err.println(ConfigData.strDataInputNotValid);
+            }
+        }
+
+        // Nhập Loại nhà
+        chon = 0; // Gán = 0 để vào vòng lặp
+        while (chon < 1 || chon > 4) {
+            System.out.print(ConfigData.strNhapLoaiNha);
+            chon = Integer.parseInt(in.nextLine());
+            if (chon >= 1 && chon <= 4) {
+                loainha = "Nhà cấp " + chon;
+            } else {
+                System.err.println(ConfigData.strDataInputNotValid);
+            }
+        }
+
         System.out.print("Giá tiền: ");
         giatien = Integer.parseInt(in.nextLine());
         return new ThuaDat(diachi, chusohuu, loainha, mucdichsudung, dientich, giatien);
     }
 
-    /**
-     * In tên tất cả các DS hiện có trong hệ thống
-     */
-    public void ShowAllListInSystem() {
-        System.out.print("Các DS hiện có trong hệ thống: ");
-        common.ConfigData.sysData.forEach((k, v) -> {
-            System.out.print(k + "\t");
-        });
-        System.out.println("");
-    }
-
     /** In dữ liệu hiện có trong danh sach ra màn hình */
     public void ShowDataInList() {
-        ShowAllListInSystem();
-        System.out.println("Nhập tên DS muốn xem: ");
-        String nameList;
-        nameList = in.nextLine();
-        ConfigData.sysData.get(nameList).forEach((td) -> {
-            System.out.println(td.toString());
-        });
+        showData(ConfigData.sysData.get(chonDanhSachThucHien()));
+    }
 
+    /**
+     * Kiểm tra danh sách có tồn tại trong hệ thống hay không?
+     *
+     * @param nameList Tên danh sách cần kiểm tra
+     *
+     * @return true | false
+     */
+    private boolean isListValid(String nameList) {
+        if (ConfigData.sysData.get(nameList) != null) {
+            return true;
+        } else {
+            System.err.println(ConfigData.strDataInputNotValid);
+            return false;
+        }
+    }
+
+    /**
+     * Chọn danh sách thực hiện tác vụ
+     *
+     * @return Tên danh sách có dữ liệu != null
+     */
+    public String chonDanhSachThucHien() {
+        while (true) {
+            System.out.print("Các DS hiện có trong hệ thống: ");
+            common.ConfigData.sysData.forEach((k, v) -> {
+                System.out.print(k + "\t");
+            });
+            System.out.println("");
+            System.out.print("Nhập tên DS muốn Thực hiện: ");
+            String nameList;
+            nameList = in.nextLine();
+            if (isListValid(nameList)) {
+                return nameList;
+            }
+        }
     }
 
     /**
@@ -128,26 +174,20 @@ public class QuanLyDat {
     public void WriteDataToExcel() {
         System.out.print("Nhập đường đẫn file ghi dữ liệu (*.xls): ");
         String filePath = in.nextLine();
-        ShowAllListInSystem();
-        System.out.print("Tên DS xuất: ");
-        String listName = in.nextLine();
+        String listName = chonDanhSachThucHien();
         // Lưu dữ liệu vào hệ thống
         ModuleController.WriteDataToXLSFile(filePath, ConfigData.sysData.get(listName));
     }
 
     public void ChenThuaDatVaoDS() {
-        ShowAllListInSystem();
-        System.out.print("Lưu vào DS: ");
-        String listName = in.nextLine();
+        String listName = chonDanhSachThucHien();
         ThuaDat td = NhapThuaDat();
         ArrayList<ThuaDat> kq = InsertToListOrdered(ConfigData.sysData.get(listName), td);
         ConfigData.sysData.put(listName, kq);
     }
 
     public void XoaDuLieuTheoYC() {
-        ShowAllListInSystem();
-        System.out.print("Chọn DS thực hiện yc: ");
-        String listName = in.nextLine();
+        String listName = chonDanhSachThucHien();
         System.out.print("Nhập thông tin cần xóa: ");
         String yeuCauXoa = in.nextLine();
         ArrayList<ThuaDat> kq = ModuleController.DeleteByQuery(ConfigData.sysData.get(listName), yeuCauXoa);
@@ -155,9 +195,7 @@ public class QuanLyDat {
     }
 
     public void TimKiemThongTin() {
-        ShowAllListInSystem();
-        System.out.print("Chọn DS thực hiện yc: ");
-        String listName = in.nextLine();
+        String listName = chonDanhSachThucHien();
         System.out.print("Nhập thông tin cần tìm kiếm: ");
         String query = in.nextLine();
         ArrayList<Integer> kq = ModuleController.SearchData(ConfigData.sysData.get(listName), query);
@@ -170,24 +208,48 @@ public class QuanLyDat {
 
     public void MergeDanhSach() {
         try (Scanner in = new Scanner(System.in)) {
-            ShowAllListInSystem();
-            System.out.print("Chọn DS1: ");
-            String ds1 = in.nextLine();
-            System.out.print("Chọn DS1: ");
-            String ds2 = in.nextLine();
-            System.out.println("Chọn tiêu chí gộp: ");
-            System.out.println("0. Địa chỉ");
-            System.out.println("1. Giá tiền");
-            System.out.println("2. Diện tích");
-            System.out.print("Bạn chọn: ");
-            int choose = Integer.parseInt(in.nextLine());
-            ConfigData.TieuChiSoSanh tieuChiSoSanh = ConfigData.TieuChiSoSanh.values()[choose];
-            System.out.println("Sắp xếp theo: ");
-            System.out.println("0. Tăng dần");
-            System.out.println("1. Giảm dần");
-            System.out.print("Bạn chọn: ");
-            choose = Integer.parseInt(in.nextLine());
-            ConfigData.SapXep sapXep = ConfigData.SapXep.values()[choose];
+            String ds1 = "", ds2 = "";
+            while (ds1.equals(ds2)) {
+                System.out.println("----CHỌN DANH SÁCH 1----");
+                ds1 = chonDanhSachThucHien();
+                System.out.println("----CHỌN DANH SÁCH 2----");
+                ds2 = chonDanhSachThucHien();
+
+                if (ds1.equals(ds2)) {
+                    System.out.print("DS1 và DS2 đang trùng nhau! Tiếp tục (Y/N): ");
+                    String choose = in.nextLine();
+                    if (choose == "Y" || choose == "\n") {
+                        break;
+                    }
+                }
+            }
+
+            ConfigData.TieuChiSoSanh tieuChiSoSanh = ConfigData.TieuChiSoSanh.DiaChi;
+            ConfigData.SapXep sapXep = ConfigData.SapXep.values()[0];
+            int chon = -1; // Gán = -1 để vào vòng lặp
+            // Chọn Tiêu chí
+            do {
+                System.out.println(ConfigData.strChonTieuChi);
+                chon = Integer.parseInt(in.nextLine());
+                if (chon >= 0 && chon <= 2) {
+                    tieuChiSoSanh = ConfigData.TieuChiSoSanh.values()[chon];
+                    break;
+                }
+                System.err.println(ConfigData.strDataInputNotValid);
+            } while (true);
+
+            chon = -1; // Gán = -1 để vào vòng lặp
+            // Chọn Tiêu chí
+            do {
+                System.out.println(ConfigData.strChonSapXep);
+                chon = Integer.parseInt(in.nextLine());
+                if (chon != 0 && chon != 1) {
+                    sapXep = ConfigData.SapXep.values()[chon];
+                    break;
+                }
+                System.err.println(ConfigData.strDataInputNotValid);
+            } while (true);
+
             ArrayList<ThuaDat> ketqua = ModuleController.MergeList(ConfigData.sysData.get(ds1), ConfigData.sysData.get(ds2), tieuChiSoSanh, sapXep);
             System.out.println("Kết quả sau khi gộp: ");
             showData(ketqua);
@@ -195,14 +257,10 @@ public class QuanLyDat {
     }
 
     public void SapXepTheoTieuChiBanDau() {
-        try (Scanner in = new Scanner(System.in)) {
-            ShowAllListInSystem();
-            System.out.println("Nhập DS thực hiện: ");
-            String listName = in.nextLine();
-            ArrayList<ThuaDat> ketqua = ModuleController.HeapsortByAddress(common.ConfigData.sysData.get(listName));
-            ConfigData.sysData.put(listName, ketqua);
-            System.out.println("Mảng vừa sắp xếp: ");
-            showData(ketqua);
-        }
+        String listName = chonDanhSachThucHien();
+        ArrayList<ThuaDat> ketqua = ModuleController.HeapsortByAddress(common.ConfigData.sysData.get(listName));
+        ConfigData.sysData.put(listName, ketqua);
+        System.out.println("Mảng vừa sắp xếp: ");
+        showData(ketqua);
     }
 }

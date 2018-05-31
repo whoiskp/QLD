@@ -37,6 +37,17 @@ public class ConfigData {
             + "--------------------------\n"
             + "Nhap x: ";
 
+    public static String strNhapLoaiNha
+            = "Loại nhà: \n 1.Nhà ở \n 2. Kinh doanh \n Bạn chọn: ";
+    public static String strNhapMucDichSD
+            = "Mục đích sử dụng: \n 1. Nhà cấp 1 \n 2. Nhà cấp 2 \n 3. Nhà cấp 3 \n 4. Nhà cấp 4 \n Bạn chọn: ";
+    public static String strChonTieuChi
+            = "Chọn tiêu chí gộp: \n 0. Địa chỉ\n 1. Giá tiền\n 2. Diện tích\n Bạn chọn: \n";
+    public static String strChonSapXep
+            = "Sắp xếp theo:  \n0. Tăng dần \n1. Giảm dần \nBạn chọn: ";
+
+    public static String strDataInputNotValid = "Dữ liệu không hợp lệ! Vui lòng nhập lại";
+
     public static boolean SoSanhTheoTieuChi(ThuaDat td1, ThuaDat td2, ConfigData.TieuChiSoSanh tieuChiSoSanh, ConfigData.SapXep kieuSapXep) {
         if (kieuSapXep == ConfigData.SapXep.TangDan) {
             return td1.SosanhTheoTieuChi(td2, tieuChiSoSanh) == 1;

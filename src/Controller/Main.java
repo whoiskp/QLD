@@ -18,7 +18,12 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         QuanLyDat qld = new QuanLyDat();
         qld.LoadDataToSystem();
-        qld.ShowAllListInSystem();
+        
+        System.out.print("Các DS hiện có trong hệ thống: ");
+        common.ConfigData.sysData.forEach((k, v) -> {
+            System.out.print(k + "\t");
+        });
+        System.out.println("");
 
         int x = -1;
         while (x <= 8 && x != 0) {
