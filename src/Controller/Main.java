@@ -5,6 +5,7 @@
  */
 package Controller;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -13,13 +14,16 @@ import java.util.Scanner;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
         QuanLyDat qld = new QuanLyDat();
+        qld.LoadDataToSystem();
+        qld.ShowAllListInSystem();
+
         int x = -1;
         while (x <= 8 && x != 0) {
-            System.out.print(common.Common.strMenu);
-            x = Integer.parseInt(in.nextLine());
+            System.out.print(common.ConfigData.strMenu);
+            x = Integer.parseInt(sc.nextLine());
             switch (x) {
                 case 1:
                     qld.ReadFromExcel();

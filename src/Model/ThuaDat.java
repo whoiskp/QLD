@@ -5,7 +5,7 @@
  */
 package Model;
 
-import common.Common;
+import common.ConfigData;
 
 /**
  *
@@ -79,7 +79,7 @@ public class ThuaDat implements Comparable<ThuaDat> {
 
     @Override
     public String toString() { // Format data in lên cho đẹp xem thêm tại https://dzone.com/articles/java-string-format-examples
-        return String.format(Common.formatData, diachi, dientich, chusohuu, loainha, mucdichsudung, giatien);
+        return String.format(ConfigData.formatData, diachi, dientich, chusohuu, loainha, mucdichsudung, giatien);
     }
 
     /**
@@ -95,7 +95,7 @@ public class ThuaDat implements Comparable<ThuaDat> {
         return Integer.compare(soNha1, soNha2);
     }
 
-    public int SosanhTheoTieuChi(ThuaDat t, Common.TieuChiSoSanh tieuChiSoSanh) {
+    public int SosanhTheoTieuChi(ThuaDat t, ConfigData.TieuChiSoSanh tieuChiSoSanh) {
         switch (tieuChiSoSanh) {
             case GiaTien:
                 return Long.compare(this.giatien, t.giatien); // Theo tiêu chí Giá tiền

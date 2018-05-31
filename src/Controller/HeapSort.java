@@ -6,7 +6,7 @@
 package Controller;
 
 import Model.ThuaDat;
-import common.Common;
+import common.ConfigData;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +43,7 @@ public class HeapSort {
      *
      * @return Danh sách đã sắp xếp
      */
-    public static ArrayList<ThuaDat> Sort(ArrayList<ThuaDat> listThuaDat, Common.TieuChiSoSanh tieuChiSoSanh, Common.SapXep kieuSapXep) {
+    public static ArrayList<ThuaDat> Sort(ArrayList<ThuaDat> listThuaDat, ConfigData.TieuChiSoSanh tieuChiSoSanh, ConfigData.SapXep kieuSapXep) {
 
         int length = listThuaDat.size();
 
@@ -58,7 +58,7 @@ public class HeapSort {
         return listThuaDat;
     }
 
-    private static void buildMaxHeap(ArrayList<ThuaDat> array, int heapSize, Common.TieuChiSoSanh tieuChiSoSanh, Common.SapXep kieuSapXep) {
+    private static void buildMaxHeap(ArrayList<ThuaDat> array, int heapSize, ConfigData.TieuChiSoSanh tieuChiSoSanh, ConfigData.SapXep kieuSapXep) {
         if (array == null) {
             throw new NullPointerException("null");
         }
@@ -87,18 +87,18 @@ public class HeapSort {
      * + Min Heap: Giá trị của mỗi node <= giá trị của các node con nó
      * => Node nhỏ nhất là node gốc
      */
-    private static void maxHeapify(ArrayList<ThuaDat> array, int index, int heapSize, Common.TieuChiSoSanh tieuChiSoSanh, Common.SapXep kieuSapXep) {
+    private static void maxHeapify(ArrayList<ThuaDat> array, int index, int heapSize, ConfigData.TieuChiSoSanh tieuChiSoSanh, ConfigData.SapXep kieuSapXep) {
         int l = index * 2; // giá trị bên trái
         int r = l + 1; // giá trị bên phải
         int largest; // giá trị lớn nhất
 
-        if (l <= heapSize && Common.SoSanhTheoTieuChi(array.get(l - 1), array.get(index - 1), tieuChiSoSanh, kieuSapXep)) {
+        if (l <= heapSize && ConfigData.SoSanhTheoTieuChi(array.get(l - 1), array.get(index - 1), tieuChiSoSanh, kieuSapXep)) {
             largest = l;
         } else {
             largest = index;
         }
 
-        if (r <= heapSize && Common.SoSanhTheoTieuChi(array.get(r - 1), array.get(largest - 1), tieuChiSoSanh, kieuSapXep)) {
+        if (r <= heapSize && ConfigData.SoSanhTheoTieuChi(array.get(r - 1), array.get(largest - 1), tieuChiSoSanh, kieuSapXep)) {
             largest = r;
         }
 

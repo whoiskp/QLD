@@ -6,7 +6,7 @@
 package Controller;
 
 import Model.ThuaDat;
-import common.Common;
+import common.ConfigData;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ public class ModuleController {
      * @return Mảng đã sắp xếp theo thứ tự tăng dần số nhà
      */
     public static ArrayList<ThuaDat> HeapsortByAddress(ArrayList<ThuaDat> listNotSorted) {
-        return HeapSort.Sort(listNotSorted, Common.TieuChiSoSanh.DiaChi, Common.SapXep.TangDan);
+        return HeapSort.Sort(listNotSorted, ConfigData.TieuChiSoSanh.DiaChi, ConfigData.SapXep.TangDan);
     }
 
     /**
@@ -109,7 +109,7 @@ public class ModuleController {
      *
      * @return Mảng đã được gộp
      */
-    public static ArrayList<ThuaDat> MergeList(ArrayList<ThuaDat> ds1, ArrayList<ThuaDat> ds2, Common.TieuChiSoSanh tieuChi, Common.SapXep sapXep) {
+    public static ArrayList<ThuaDat> MergeList(ArrayList<ThuaDat> ds1, ArrayList<ThuaDat> ds2, ConfigData.TieuChiSoSanh tieuChi, ConfigData.SapXep sapXep) {
         ArrayList<ThuaDat> result = new ArrayList<>();
         ds1.forEach((s) -> result.add(s));
         ds2.forEach((s) -> result.add(s));
