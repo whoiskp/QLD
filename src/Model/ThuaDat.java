@@ -91,7 +91,7 @@ public class ThuaDat implements Comparable<ThuaDat> {
     @Override
     public int compareTo(ThuaDat t) {
         int soNha1 = Integer.parseInt(this.diachi.substring(0, this.diachi.indexOf(" "))); // số nhà 1
-        int soNha2 = Integer.parseInt(t.diachi.substring(0, this.diachi.indexOf(" "))); // số nhà cần so sánh
+        int soNha2 = Integer.parseInt(t.diachi.substring(0, t.diachi.indexOf(" "))); // số nhà cần so sánh
         return Integer.compare(soNha1, soNha2);
     }
 

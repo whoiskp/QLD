@@ -45,6 +45,13 @@ public class ModuleController {
     public static ArrayList<ThuaDat> InsertToListOrdered(ArrayList<ThuaDat> listOrdered, ThuaDat thuaDat) {
         ArrayList<ThuaDat> result;
         result = new ArrayList<>();
+        
+        // Danh sách trống => thêm luôn
+        if (listOrdered.size() == 0) {
+            result.add(thuaDat); // Thêm vào 
+            return result; // trả về luôn
+        }
+
         int i = 0;
         // Đưa các dữ liệu có địa chỉ <= địa chỉ của thửa đất cần thêm vào mảng kết quả (Để đảm bảo thứ tự)
         while (listOrdered.get(i).compareTo(thuaDat) <= 0) {
@@ -73,7 +80,7 @@ public class ModuleController {
         ArrayList<Integer> result; // Tạo mảng integer chứa chỉ số kết quả tìm được
         result = new ArrayList<>();
         for (int i = 0; i < listThuaDat.size(); i++) {
-            if (listThuaDat.get(i).toString().contains(query)) {
+            if (listThuaDat.get(i).toString().toLowerCase().contains(query.toLowerCase())) {
                 result.add(i);
             }
         }
@@ -93,7 +100,7 @@ public class ModuleController {
 
         // Thực hiện việc xóa các phần tử thỏa điều kiện tìm được trong mảng listThuaDat
         for (Integer index : resultIndexOfDataToDelete) {
-            listThuaDat.remove(index);
+            listThuaDat.remove(listThuaDat.get(index));
         }
 
         return listThuaDat; // Trả về mảng đã xóa
@@ -145,5 +152,21 @@ public class ModuleController {
         } catch (IOException ex) {
             Logger.getLogger(ModuleController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Kiểm tra danh sách có đang được sắp xếp tăng dần không?
+     *
+     * @return true: Đã được sắp xếp theo yêu cầu
+     */
+    public static boolean IsListSortedAscByAddress(ArrayList<ThuaDat> listData) {
+        // Mặc định là đã sắp xếp tăng dần
+        // => chỉ cần tìm ra 1 trường hợp là thằng trước > thằng sau => return false luôn
+        for (int i = 0; i < listData.size() - 1; i++) {
+            if (listData.get(i).compareTo(listData.get(i + 1)) == 1) {
+                return false;
+            }
+        }
+        return true;
     }
 }

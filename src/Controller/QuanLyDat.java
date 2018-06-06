@@ -5,7 +5,6 @@
  */
 package Controller;
 
-import static Controller.ModuleController.InsertToListOrdered;
 import Model.ThuaDat;
 import common.ConfigData;
 import java.io.IOException;
@@ -181,9 +180,23 @@ public class QuanLyDat {
 
     public void ChenThuaDatVaoDS() {
         String listName = chonDanhSachThucHien();
+
+        // Kiểm tra xem danh sách đã được sắp xếp hay chưa?
+        if (!ModuleController.IsListSortedAscByAddress(ConfigData.sysData.get(listName))) {
+            System.out.println("Danh sách chưa được sắp xếp! SX ngay (y/n): ");
+            String choose = in.nextLine();
+            if (choose.equalsIgnoreCase("Y") || choose == "\n") {
+                ArrayList<ThuaDat> ketqua = ModuleController.HeapsortByAddress(common.ConfigData.sysData.get(listName));
+                ConfigData.sysData.put(listName, ketqua);
+                System.out.println("Mảng vừa sắp xếp: ");
+                showData(ketqua);
+            }
+        }
         ThuaDat td = NhapThuaDat();
-        ArrayList<ThuaDat> kq = InsertToListOrdered(ConfigData.sysData.get(listName), td);
+        ArrayList<ThuaDat> kq = ModuleController.InsertToListOrdered(ConfigData.sysData.get(listName), td);
         ConfigData.sysData.put(listName, kq);
+        System.out.println("DS sau khi thêm!");
+        showData(kq);
     }
 
     public void XoaDuLieuTheoYC() {
@@ -192,6 +205,8 @@ public class QuanLyDat {
         String yeuCauXoa = in.nextLine();
         ArrayList<ThuaDat> kq = ModuleController.DeleteByQuery(ConfigData.sysData.get(listName), yeuCauXoa);
         ConfigData.sysData.put(listName, kq);
+        System.out.println("Dữ liệu danh sách sau khi xóa: ");
+        showData(ConfigData.sysData.get(listName));
     }
 
     public void TimKiemThongTin() {
@@ -202,58 +217,56 @@ public class QuanLyDat {
         System.out.println("Kết quả tìm được: ");
         System.out.println(ConfigData.titleShow);
         kq.forEach((index) -> {
-            System.out.println(String.format("|%4s", index) + ConfigData.sysData.get(listName).get(index).toString());
+            System.out.println(String.format("|%4s", index + 1) + ConfigData.sysData.get(listName).get(index).toString());
         });
     }
 
     public void MergeDanhSach() {
-        try (Scanner in = new Scanner(System.in)) {
-            String ds1 = "", ds2 = "";
-            while (ds1.equals(ds2)) {
-                System.out.println("----CHỌN DANH SÁCH 1----");
-                ds1 = chonDanhSachThucHien();
-                System.out.println("----CHỌN DANH SÁCH 2----");
-                ds2 = chonDanhSachThucHien();
+        String ds1 = "", ds2 = "";
+        while (ds1.equals(ds2)) {
+            System.out.println("----CHỌN DANH SÁCH 1----");
+            ds1 = chonDanhSachThucHien();
+            System.out.println("----CHỌN DANH SÁCH 2----");
+            ds2 = chonDanhSachThucHien();
 
-                if (ds1.equals(ds2)) {
-                    System.out.print("DS1 và DS2 đang trùng nhau! Tiếp tục (Y/N): ");
-                    String choose = in.nextLine();
-                    if (choose == "Y" || choose == "\n") {
-                        break;
-                    }
+            if (ds1.equals(ds2)) {
+                System.out.print("DS1 và DS2 đang trùng nhau! Tiếp tục (Y/N): ");
+                String choose = in.nextLine();
+                if (choose.equalsIgnoreCase("Y") || choose == "\n") {
+                    break;
                 }
             }
-
-            ConfigData.TieuChiSoSanh tieuChiSoSanh = ConfigData.TieuChiSoSanh.DiaChi;
-            ConfigData.SapXep sapXep = ConfigData.SapXep.values()[0];
-            int chon = -1; // Gán = -1 để vào vòng lặp
-            // Chọn Tiêu chí
-            do {
-                System.out.println(ConfigData.strChonTieuChi);
-                chon = Integer.parseInt(in.nextLine());
-                if (chon >= 0 && chon <= 2) {
-                    tieuChiSoSanh = ConfigData.TieuChiSoSanh.values()[chon];
-                    break;
-                }
-                System.err.println(ConfigData.strDataInputNotValid);
-            } while (true);
-
-            chon = -1; // Gán = -1 để vào vòng lặp
-            // Chọn Tiêu chí
-            do {
-                System.out.println(ConfigData.strChonSapXep);
-                chon = Integer.parseInt(in.nextLine());
-                if (chon != 0 && chon != 1) {
-                    sapXep = ConfigData.SapXep.values()[chon];
-                    break;
-                }
-                System.err.println(ConfigData.strDataInputNotValid);
-            } while (true);
-
-            ArrayList<ThuaDat> ketqua = ModuleController.MergeList(ConfigData.sysData.get(ds1), ConfigData.sysData.get(ds2), tieuChiSoSanh, sapXep);
-            System.out.println("Kết quả sau khi gộp: ");
-            showData(ketqua);
         }
+
+        ConfigData.TieuChiSoSanh tieuChiSoSanh = ConfigData.TieuChiSoSanh.DiaChi;
+        ConfigData.SapXep sapXep = ConfigData.SapXep.values()[0];
+        int chon = -1; // Gán = -1 để vào vòng lặp
+        // Chọn Tiêu chí
+        do {
+            System.out.print(ConfigData.strChonTieuChi);
+            chon = Integer.parseInt(in.nextLine());
+            if (chon >= 0 && chon <= 2) {
+                tieuChiSoSanh = ConfigData.TieuChiSoSanh.values()[chon];
+                break;
+            }
+            System.err.println(ConfigData.strDataInputNotValid);
+        } while (true);
+
+        chon = -1; // Gán = -1 để vào vòng lặp
+        // Chọn Tiêu chí
+        do {
+            System.out.print(ConfigData.strChonSapXep);
+            chon = Integer.parseInt(in.nextLine());
+            if (chon == 0 || chon == 1) {
+                sapXep = ConfigData.SapXep.values()[chon];
+                break;
+            }
+            System.err.println(ConfigData.strDataInputNotValid);
+        } while (true);
+
+        ArrayList<ThuaDat> ketqua = ModuleController.MergeList(ConfigData.sysData.get(ds1), ConfigData.sysData.get(ds2), tieuChiSoSanh, sapXep);
+        System.out.println("Kết quả sau khi gộp: ");
+        showData(ketqua);
     }
 
     public void SapXepTheoTieuChiBanDau() {

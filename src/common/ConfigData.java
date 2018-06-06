@@ -42,7 +42,7 @@ public class ConfigData {
     public static String strNhapMucDichSD
             = "Mục đích sử dụng: \n 1. Nhà cấp 1 \n 2. Nhà cấp 2 \n 3. Nhà cấp 3 \n 4. Nhà cấp 4 \n Bạn chọn: ";
     public static String strChonTieuChi
-            = "Chọn tiêu chí gộp: \n 0. Địa chỉ\n 1. Giá tiền\n 2. Diện tích\n Bạn chọn: \n";
+            = "Chọn tiêu chí gộp: \n 0. Địa chỉ\n 1. Giá tiền\n 2. Diện tích\n Bạn chọn: ";
     public static String strChonSapXep
             = "Sắp xếp theo:  \n0. Tăng dần \n1. Giảm dần \nBạn chọn: ";
 

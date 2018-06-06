@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -22,7 +24,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 
 /**
@@ -47,82 +48,98 @@ public class ThuaDatExcelHelper {
     /**
      * Tạo file excel với thông tin được lưu vào
      *
-     * @param filePath Link file sau khi tạo
+     * @param fileName Link file sau khi tạo
      * @param List     dữ liệu ghi ra file
+     *
      * @throws java.io.IOException
      */
-    public static void CreateExcel(String filePath, ArrayList<ThuaDat> List) throws IOException {
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet("Student sheet");
-        int rowNum = 0;
-        Cell cell;
-        Row row;
-
-        HSSFCellStyle style = createStyleForTitle(workbook);
-        row = sheet.createRow(rowNum);
-
-        //STT
-        cell = row.createCell(0, CellType.STRING);
-        cell.setCellValue("STT");
-        cell.setCellStyle(style);
-        //Địa chỉ
-        cell = row.createCell(1, CellType.STRING);
-        cell.setCellValue("Địa chỉ");
-        cell.setCellStyle(style);
-        //Diện tích
-        cell = row.createCell(2, CellType.STRING);
-        cell.setCellValue("Diện tích");
-        cell.setCellStyle(style);
-        // Chủ sở hữu hiện tại
-        cell = row.createCell(3, CellType.STRING);
-        cell.setCellValue("Chủ sở hữu hiện tại");
-        cell.setCellStyle(style);
-        //Loại nhà
-        cell = row.createCell(4, CellType.STRING);
-        cell.setCellValue("Loại nhà");
-        cell.setCellStyle(style);
-        //Mục đích sử dụng
-        cell = row.createCell(5, CellType.STRING);
-        cell.setCellValue("Mục đích sử dụng");
-        cell.setCellStyle(style);
-        //Giá Tiền
-        cell = row.createCell(6, CellType.STRING);
-        cell.setCellValue("Giá Tiền");
-        cell.setCellStyle(style);
-
-        //DATA
-        for (ThuaDat td : List) {
-            rowNum++;
+    public static void CreateExcel(String fileName, ArrayList<ThuaDat> List) {
+        FileOutputStream outFile = null;
+        try {
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet sheet = workbook.createSheet("Thua Dat sheet");
+            int rowNum = 0;
+            Cell cell;
+            Row row;
+            HSSFCellStyle style = createStyleForTitle(workbook);
             row = sheet.createRow(rowNum);
-
             //STT
-            cell = row.createCell(0, CellType.NUMERIC);
-            cell.setCellValue(rowNum);
+            cell = row.createCell(0, CellType.STRING);
+            cell.setCellValue("STT");
+            cell.setCellStyle(style);
             //Địa chỉ
             cell = row.createCell(1, CellType.STRING);
-            cell.setCellValue(td.getDiachi());
+            cell.setCellValue("Địa chỉ");
+            cell.setCellStyle(style);
             //Diện tích
-            cell = row.createCell(2, CellType.NUMERIC);
-            cell.setCellValue(td.getDientich());
-            //Chủ sở hữu hiện tại
+            cell = row.createCell(2, CellType.STRING);
+            cell.setCellValue("Diện tích");
+            cell.setCellStyle(style);
+            // Chủ sở hữu hiện tại
             cell = row.createCell(3, CellType.STRING);
-            cell.setCellValue(td.getChusohuu());
+            cell.setCellValue("Chủ sở hữu hiện tại");
+            cell.setCellStyle(style);
             //Loại nhà
             cell = row.createCell(4, CellType.STRING);
-            cell.setCellValue(td.getLoainha());
+            cell.setCellValue("Loại nhà");
+            cell.setCellStyle(style);
             //Mục đích sử dụng
             cell = row.createCell(5, CellType.STRING);
-            cell.setCellValue(td.getLoainha());
-            //Giá tiền
-            cell = row.createCell(6, CellType.NUMERIC);
-            cell.setCellValue(td.getGiatien());
-        }
-        File file = new File(filePath);
-        file.getParentFile().mkdirs();
+            cell.setCellValue("Mục đích sử dụng");
+            cell.setCellStyle(style);
+            //Giá Tiền
+            cell = row.createCell(6, CellType.STRING);
+            cell.setCellValue("Giá Tiền");
+            cell.setCellStyle(style);
+            //DATA
+            for (ThuaDat td : List) {
+                rowNum++;
+                row = sheet.createRow(rowNum);
 
-        FileOutputStream outFile = new FileOutputStream(file);
-        workbook.write(outFile);
-        System.out.println("Đã tạo file ở địa chỉ: " + file.getAbsolutePath());
+                //STT
+                cell = row.createCell(0, CellType.NUMERIC);
+                cell.setCellValue(rowNum);
+                //Địa chỉ
+                cell = row.createCell(1, CellType.STRING);
+                cell.setCellValue(td.getDiachi());
+                //Diện tích
+                cell = row.createCell(2, CellType.NUMERIC);
+                cell.setCellValue(td.getDientich());
+                //Chủ sở hữu hiện tại
+                cell = row.createCell(3, CellType.STRING);
+                cell.setCellValue(td.getChusohuu());
+                //Loại nhà
+                cell = row.createCell(4, CellType.STRING);
+                cell.setCellValue(td.getLoainha());
+                //Mục đích sử dụng
+                cell = row.createCell(5, CellType.STRING);
+                cell.setCellValue(td.getLoainha());
+                //Giá tiền
+                cell = row.createCell(6, CellType.NUMERIC);
+                cell.setCellValue(td.getGiatien());
+            }
+            
+            // Đính kèm timestamp tránh trùng tên file.
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            String filePath = common.ConfigData.pathLoadExportData + fileName + "-" + sdf.format(timestamp) + ".xls";
+            
+            File file = new File(filePath);
+            file.getParentFile().mkdirs();
+            outFile = new FileOutputStream(file);
+            workbook.write(outFile);
+            System.out.println("Đã tạo file ở địa chỉ: " + file.getAbsolutePath());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ThuaDatExcelHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ThuaDatExcelHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                outFile.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ThuaDatExcelHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
@@ -198,7 +215,6 @@ public class ThuaDatExcelHelper {
 //                }
 //                System.out.println("");
 //            }
-
             if (sheet != null && sheet.getLastRowNum() > 0) {
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
@@ -233,4 +249,5 @@ public class ThuaDatExcelHelper {
         }
         return list;
     }
+
 }
